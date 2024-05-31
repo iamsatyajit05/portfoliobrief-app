@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
-type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'IntroScreen2'>;
+type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'OnBoardingScreen'>;
 
 type Props = {
   navigation: IntroScreen2NavigationProp;
@@ -12,8 +12,8 @@ type Props = {
 const IntroScreen2: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Intro Screen 2</Text>
-      <Button title="Go to Home" onPress={() => navigation.replace('AppNavigator')} />
+      <Text style={styles.title}>On Boarding Screen</Text>
+      <Button title="LogIn" onPress={() => navigation.replace('AppNavigator')} />
     </View>
   );
 };

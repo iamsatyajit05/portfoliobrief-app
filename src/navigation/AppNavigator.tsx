@@ -23,7 +23,7 @@ const AppNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: string = '';
-
+          
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'News') {
@@ -33,6 +33,7 @@ const AppNavigator = () => {
           } else if (route.name === 'Stocks') {
             iconName = focused ? 'trending-up' : 'trending-up-outline';
           }
+          console.log(iconName);
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
