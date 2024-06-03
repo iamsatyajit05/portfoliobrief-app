@@ -41,10 +41,10 @@ const AppNavigator = () => {
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="News" component={NewsScreen} />
-      <Tab.Screen name="Setting" component={SettingScreen} />
-      <Tab.Screen name="Stocks" component={StocksScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{headerShown:false,}}/>
+      <Tab.Screen name="News" component={NewsScreen} options={{headerShown:false,}}/>
+      <Tab.Screen name="Setting" component={SettingScreen} options={{headerShown:false,}}/>
+      <Tab.Screen name="Stocks" component={StocksScreen} options={{headerShown:false,}}/>
     </Tab.Navigator>
   );
 };
