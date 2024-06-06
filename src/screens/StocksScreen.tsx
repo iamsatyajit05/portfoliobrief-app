@@ -1,10 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '../components/ThemeContext';
 
 const StocksScreen: React.FC = () => {
+  const { isDarkMode } = useTheme();
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Stocks Screen</Text>
+    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#F5FCFF' }]}>
+      <Text style={[styles.title, { color: isDarkMode ? '#fff' : '#000' }]}>Stocks Screen</Text>
     </View>
   );
 };
@@ -14,7 +17,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   },
   title: {
     fontSize: 20,
