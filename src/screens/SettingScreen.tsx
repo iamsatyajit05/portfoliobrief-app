@@ -3,10 +3,15 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity, Image } from 'react-n
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../components/ThemeContext';
+import { Linking } from 'react-native';
 
 const SettingScreen = () => {
   const { isDarkMode, toggleDarkMode } = useTheme();
   const navigation = useNavigation();
+  
+  const handleOpenURL = (url: string) => {
+    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+  };
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkMode : styles.lightMode]}>
@@ -35,18 +40,22 @@ const SettingScreen = () => {
       </View>
       <TouchableOpacity
         style={styles.settingItem}
-        onPress={() => navigation.navigate('TermsAndConditions')}
+        onPress={() => handleOpenURL('https://portfoliobrief-frontend.vercel.app/termsnconditions')}
       >
         <Ionicons name="document-text" size={18} color={isDarkMode ? '#fff' : '#788EF5'} />
-        <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Terms & Conditions</Text>
+        <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>
+          Terms & Conditions
+        </Text>
         <Ionicons name="chevron-forward" size={18} color={isDarkMode ? '#fff' : '#666'} />
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.settingItem}
-        onPress={() => navigation.navigate('About')}
+        onPress={() => handleOpenURL('https://example.com/about')}
       >
         <Ionicons name="information-circle" size={18} color={isDarkMode ? '#fff' : '#788EF5'} />
-        <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>About</Text>
+        <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>
+          About
+        </Text>
         <Ionicons name="chevron-forward" size={18} color={isDarkMode ? '#fff' : '#666'} />
       </TouchableOpacity>
       <TouchableOpacity

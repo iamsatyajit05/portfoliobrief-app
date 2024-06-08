@@ -8,30 +8,19 @@ import HomeScreen from '../screens/HomeScreen';
 import NewsScreen from '../screens/NewsScreen';
 import SettingScreen from '../screens/SettingScreen';
 import StocksScreen from '../screens/StocksScreen';
-import TermsAndConditions from '../screens/TermsAndConditionsScreen';
-import About from '../screens/AboutScreen';
 
 export type RootStackParamList = {
   Home: undefined;
   News: undefined;
   Setting: undefined;
   Stocks: undefined;
-  TermsAndConditions: undefined;
-  About: undefined;
+
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-const SettingsStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Setting" component={SettingScreen} />
-      <Stack.Screen name="TermsAndConditions" component={TermsAndConditions} />
-      <Stack.Screen name="About" component={About} />
-    </Stack.Navigator>
-  );
-};
+
 
 const AppNavigator = () => {
   const { isDarkMode } = useTheme();
@@ -66,7 +55,7 @@ const AppNavigator = () => {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="News" component={NewsScreen} />
-      <Tab.Screen name="Setting" component={SettingsStack}  />
+      <Tab.Screen name="Setting" component={SettingScreen}  />
       <Tab.Screen name="Stocks" component={StocksScreen} />
     </Tab.Navigator>
   );
