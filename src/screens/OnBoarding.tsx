@@ -74,10 +74,10 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
       <View style={styles.mainView}>
         <View style={styles.centeredView}>
           <View style={styles.paddingView}>
-            <Text style={[styles.titleText, { fontFamily: 'Poppins-Bold' }]}>
+            <Text style={styles.titleText}>
               Stay Informed
             </Text>
-            <Text style={[styles.subtitleText, { fontFamily: 'Poppins-SemiBold' }]}>
+            <Text style={styles.subtitleText}>
               AI analyzes. You stay ahead. News made efficient.
             </Text>
           </View>
@@ -105,7 +105,7 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
                   disabled={!networkInformation}
                   onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/privacypolicy')}
                 >
-                  <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
+                  <Text style={styles.policyText}>
                     Privacy Policy
                   </Text>
                 </TouchableOpacity>
@@ -114,7 +114,7 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
                   disabled={!networkInformation}
                   onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/termsnconditions')}
                 >
-                  <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
+                  <Text style={styles.policyText}>
                     Terms and Conditions
                   </Text>
                 </TouchableOpacity>
@@ -158,14 +158,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     color: '#282828',
+    fontFamily: 'Inter-Bold'
   },
   subtitleText: {
     fontSize: 14,
-    fontWeight: '500',
     textAlign: 'center',
     color: '#282828',
     marginTop: 12,
     marginBottom: 20,
+    fontFamily: 'Inter-SemiBold'
   },
   lottieView: {
     flexDirection: 'row',
@@ -195,6 +196,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     opacity: 0.7,
+    fontFamily: 'Inter-SemiBold'
   },
   separatorText: {
     color: 'black',

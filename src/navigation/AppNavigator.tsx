@@ -1,6 +1,5 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../components/ThemeContext';
 
@@ -8,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import NewsScreen from '../screens/NewsScreen';
 import SettingScreen from '../screens/SettingScreen';
 import StocksScreen from '../screens/StocksScreen';
+import Header from '../components/Header';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -19,9 +19,6 @@ export type RootStackParamList = {
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
-const Stack = createStackNavigator<RootStackParamList>();
-
-
 
 const AppNavigator = () => {
   const { isDarkMode } = useTheme();
@@ -32,7 +29,7 @@ const AppNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: string = '';
-          
+
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'News') {
@@ -47,17 +44,43 @@ const AppNavigator = () => {
         },
         tabBarActiveTintColor: isDarkMode ? 'white' : '#788EF5',
         tabBarInactiveTintColor: isDarkMode ? '#aaa' : 'gray',
-        headerShown: false,
-	tabBarStyle: {
-          backgroundColor: isDarkMode ? 'black' : 'white', 
+        tabBarStyle: {
+          backgroundColor: isDarkMode ? 'black' : 'white',
+          height: 55,
         },
+        tabBarLabelStyle: {
+          fontFamily: 'Inter-SemiBold',
+          fontSize: 14
+        },
+        tabBarIconStyle: {
+          marginTop: 3
+        }
       })}
-      
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="News" component={NewsScreen} />
-      <Tab.Screen name="Setting" component={SettingScreen}  />
-      <Tab.Screen name="Stocks" component={StocksScreen} />
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerTitle: () => <Header name="Portfolio Brief" />
+        }} />
+      <Tab.Screen
+        name="News"
+        component={NewsScreen}
+        options={{
+          headerTitle: () => <Header name="News" />
+        }} />
+      <Tab.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{
+          headerTitle: () => <Header name="Setting" />
+        }} />
+      <Tab.Screen
+        name="Stocks"
+        component={StocksScreen}
+        options={{
+          headerTitle: () => <Header name="Stocks" />
+        }} />
     </Tab.Navigator>
   );
 };

@@ -44,7 +44,8 @@ const ButtonComponent = (props: buttonProps) => {
             color: '#FAFAFA',
             fontWeight: '600',
             borderBottomColor: props.underline ? '#FAFAFA' : undefined,
-            borderBottomWidth: props.underline ? 1 : 0
+            borderBottomWidth: props.underline ? 1 : 0,
+            fontFamily: "Inter-SemiBold",
         }
     })
 
