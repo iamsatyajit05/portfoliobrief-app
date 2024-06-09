@@ -51,29 +51,33 @@ const HomeScreen = () => {
         <Text style={[styles.header, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Veritas</Text>
         <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
           <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
-          <TextInput 
-            style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]} 
-            placeholder="Search for News..." 
+          <TextInput
+            style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]}
+            placeholder="Search for News..."
             placeholderTextColor={isDarkMode ? '#ccc' : '#666'}
           />
         </View>
         <Text style={[styles.categoryHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Category</Text>
-        <FlatList
-          data={categories}
-          renderItem={renderCategoryItem}
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoryList}
-        />
+        <View>
+          <FlatList
+            data={categories}
+            renderItem={renderCategoryItem}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryList}
+          />
+        </View>
         <Text style={[styles.highlightHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Top Highlights</Text>
-        <FlatList
-          data={highlights}
-          renderItem={renderHighlightItem}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.highlightList}
-        />
+        <View>
+          <FlatList
+            data={highlights}
+            renderItem={renderHighlightItem}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.highlightList}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -109,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f1f1',
   },
   searchLightIcon: {
-	marginRight: 10,
+    marginRight: 10,
     backgroundColor: '#788EF5',
     color: 'white',
     marginLeft: -10,
@@ -119,7 +123,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderRadius: 14,
   },
- searchDarkIcon: {
+  searchDarkIcon: {
     marginRight: 10,
     backgroundColor: 'white',
     color: 'black',
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-backgroundColor: '#f9f9f9',
+    backgroundColor: '#f9f9f9',
   },
   highlightImage: {
     marginTop: 5,
@@ -235,8 +239,8 @@ backgroundColor: '#f9f9f9',
     color: '#fff',
   },
   lightModeText: {
-    color:'#000',
-},
+    color: '#000',
+  },
 });
 
 export default HomeScreen;

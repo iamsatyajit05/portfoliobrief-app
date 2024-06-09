@@ -1,30 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Switch, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../components/ThemeContext';
 import { Linking } from 'react-native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import auth from '@react-native-firebase/auth';
+import { CheckConnection } from '../utils/connection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
-const SettingScreen = () => {
+
+type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'SettingScreen'>;
+
+type Props = {
+  navigation: IntroScreen2NavigationProp;
+};
+
+const SettingScreen: React.FC<Props> = ({ navigation }) => {
   const { isDarkMode, toggleDarkMode } = useTheme();
-  const navigation = useNavigation();
-  
+  const user = auth().currentUser;
+  const [loading, setLoading] = useState(false);
+  const networkInformation = CheckConnection();
+
   const handleOpenURL = (url: string) => {
     Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+  };
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await AsyncStorage.removeItem('userLoggedIn');
+      await auth().signOut();
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      navigation.navigate('OnBoardingScreen');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'OnBoardingScreen' }],
+      });
+      setLoading(false);
+    } catch (error) { }
   };
 
   return (
     <View style={[styles.container, isDarkMode ? styles.darkMode : styles.lightMode]}>
       <Text style={[styles.header, isDarkMode ? styles.darkModeText : styles.lightModeText, { textAlign: 'center' }]}>Settings</Text>
       <View style={styles.userInfo}>
-        <Image
-          source={{ uri: 'https://cdn.pixabay.com/photo/2020/06/13/17/51/milky-way-5295160_960_720.jpg' }}
-          style={styles.userImage}
-          onError={(error) => console.error('Image loading error:', error)}
-        />
+
+        {user?.photoURL ? (
+          <Image
+            src={user.photoURL}
+            style={styles.userImage}
+            alt="User Profile"
+          />
+        ) : (
+          <Image
+            source={{ uri: 'https://cdn.pixabay.com/photo/2020/06/13/17/51/milky-way-5295160_960_720.jpg' }}
+            style={styles.userImage}
+            onError={(error) => console.error('Image loading error:', error)}
+          />
+        )}
         <View style={styles.userInfoText}>
-          <Text style={[styles.userName, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Yax Buzz</Text>
-          <Text style={[styles.userEmail, isDarkMode ? styles.darkModeText : styles.lightModeText]}>yaxvadodariy@gmail.com</Text>
+          <Text style={[styles.userName, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{user?.displayName}</Text>
+          <Text style={[styles.userEmail, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{user?.email}</Text>
         </View>
       </View>
       <View style={styles.settingItem}>
@@ -50,7 +89,7 @@ const SettingScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.settingItem}
-        onPress={() => handleOpenURL('https://example.com/about')}
+        onPress={() => handleOpenURL('https://portfoliobrief-frontend.vercel.app/about')}
       >
         <Ionicons name="information-circle" size={18} color={isDarkMode ? '#fff' : '#788EF5'} />
         <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>
@@ -60,9 +99,7 @@ const SettingScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.settingItem}
-        onPress={() => {
-          // Implement the logic to handle logout here
-        }}
+        onPress={handleLogout}
       >
         <Ionicons name="log-out-outline" size={18} color={isDarkMode ? '#fff' : '#788EF5'} />
         <Text style={[styles.settingText, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Log Out</Text>

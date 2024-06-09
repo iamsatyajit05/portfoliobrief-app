@@ -63,7 +63,7 @@ const ButtonComponent = (props: buttonProps) => {
                     ? props.children
                     : !props.onlyLoading && (
                         <>
-                            {props.iconComponent}
+                            {!props.isLoading && props.iconComponent}
                             {!props.onlyIcon && (
                                 <Text style={[style.buttonText, props.fontStyle]}>
                                     {props.title}

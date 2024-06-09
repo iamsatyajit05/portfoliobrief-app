@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
 import { CheckConnection } from '../utils/connection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -13,7 +12,7 @@ import { firebase } from '@react-native-firebase/app';
 import LottieView from 'lottie-react-native';
 import ButtonComponent from '../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { GOOGLE_WEB_CLIENT_ID } from '../utils/constants';
+import { GOOGLE_WEB_CLIENT_ID, colors } from '../utils/constants';
 
 type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'OnBoardingScreen'>;
 
@@ -36,11 +35,13 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
   const checkLoginStatus = async () => {
     try {
       const userIsLoggedIn = await AsyncStorage.getItem('userLoggedIn');
+      console.log(userIsLoggedIn);
+
       if (userIsLoggedIn) {
-        navigation.navigate('Home');
+        navigation.navigate('AppNavigator');
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Home' }],
+          routes: [{ name: 'AppNavigator' }],
         });
         setShowLoginBtn(false);
       } else {
@@ -57,51 +58,11 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
       await AsyncStorage.setItem('userLoggedIn', 'true');
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
       const userInfo = await auth().signInWithCredential(googleCredential);
-      const ifUser = await firestore()
-        .collection('users')
-        .doc(userInfo.user.uid)
-        .get();
 
-      if (!ifUser._data) {
-        await firestore()
-          .collection('users')
-          .doc(userInfo.user.uid)
-          .set({
-            user_id: userInfo.user.uid,
-            user_email: userInfo.user.email,
-            full_name: userInfo.user.displayName,
-            phone_number: userInfo.user.phoneNumber,
-            avatar_url: userInfo.user.photoURL,
-            created_at: firebase.firestore.FieldValue.serverTimestamp(),
-            plan: 'free',
-          })
-          .then(() => {
-            console.log('New User created!');
-          })
-          .catch(err => console.log(err));
-        await firestore()
-          .collection('history')
-          .doc(userInfo.user.uid)
-          .set({
-            user_id: userInfo.user.uid,
-            user_email: userInfo.user.email,
-            recent_work: [],
-            doc_created_at: firebase.firestore.FieldValue.serverTimestamp(),
-          })
-          .then(() => {
-            console.log('New History created!');
-            navigation.navigate('Home');
-            navigation.reset({
-              index: 0,
-              routes: [{ name: 'Home' }],
-            });
-          })
-          .catch(err => console.log(err));
-      }
-      navigation.navigate('Home');
+      navigation.navigate('AppNavigator');
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Home' }],
+        routes: [{ name: 'AppNavigator' }],
       });
     } catch (error) {
       console.log(error);
@@ -111,66 +72,65 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.mainView}>
-          <View style={styles.centeredView}>
-            <View style={styles.paddingView}>
-              <Text style={[styles.titleText, { fontFamily: 'Poppins-Bold' }]}>
-                Stay Informed
-              </Text>
-              <Text style={[styles.subtitleText, { fontFamily: 'Poppins-SemiBold' }]}>
-                AI analyzes. You stay ahead. News made efficient.
-              </Text>
-            </View>
-            <View style={styles.lottieView}>
-              <Image
-                style={styles.lottieAnimation}
-                source={require('../assets/onboarding.png')}
-              />
-            </View>
+      <View style={styles.mainView}>
+        <View style={styles.centeredView}>
+          <View style={styles.paddingView}>
+            <Text style={[styles.titleText, { fontFamily: 'Poppins-Bold' }]}>
+              Stay Informed
+            </Text>
+            <Text style={[styles.subtitleText, { fontFamily: 'Poppins-SemiBold' }]}>
+              AI analyzes. You stay ahead. News made efficient.
+            </Text>
           </View>
-          <View style={[styles.footerView, !showLoginBtn && styles.centeredFooterView]}>
-            {showLoginBtn ? (
-              <>
-                <ButtonComponent
-                  radius={100}
-                  title={'Login With Google'}
-                  isLoading={loading}
-                  iconComponent={<Icon name="google" size={20} color={'#FFF'} />}
-                  onBtnPress={googleLogin}
-                  isDisabled={!networkInformation || loading}
-                />
-                <View style={styles.policyView}>
-                  <TouchableOpacity
-                    disabled={!networkInformation}
-                    onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/privacypolicy')}
-                  >
-                    <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
-                      Privacy Policy
-                    </Text>
-                  </TouchableOpacity>
-                  <Text style={styles.separatorText}> • </Text>
-                  <TouchableOpacity
-                    disabled={!networkInformation}
-                    onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/termsnconditions')}
-                  >
-                    <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
-                      Terms and Conditions
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </>
-            ) : (
-              <LottieView
-                style={styles.loadingBar}
-                source={require('../assets/loadingbars.json')}
-                autoPlay
-                loop
-              />
-            )}
+          <View style={styles.lottieView}>
+            <Image
+              style={styles.lottieAnimation}
+              source={require('../assets/onboarding.png')}
+            />
           </View>
         </View>
-      </ScrollView>
+        <View style={[styles.footerView, !showLoginBtn && styles.centeredFooterView]}>
+          {showLoginBtn ? (
+            <>
+              <ButtonComponent
+                radius={100}
+                title={'Login With Google'}
+                isLoading={loading}
+                iconComponent={<Icon name="google" size={20} color={'#FFF'} />}
+                onBtnPress={googleLogin}
+                isDisabled={!networkInformation || loading}
+                bgColor={colors.primary}
+              />
+              <View style={styles.policyView}>
+                <TouchableOpacity
+                  disabled={!networkInformation}
+                  onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/privacypolicy')}
+                >
+                  <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
+                    Privacy Policy
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.separatorText}> • </Text>
+                <TouchableOpacity
+                  disabled={!networkInformation}
+                  onPress={() => Linking.openURL('https://portfoliobrief-frontend.vercel.app/termsnconditions')}
+                >
+                  <Text style={[styles.policyText, { fontFamily: 'Poppins-SemiBold' }]}>
+                    Terms and Conditions
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          ) : (
+            <LottieView
+              style={styles.loadingBar}
+              source={require('../assets/loadingbars.json')}
+              autoPlay
+              loop
+            />
+          )}
+        </View>
+      </View>
     </SafeAreaView >
   );
 };
@@ -181,11 +141,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   mainView: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    height: '100%',
+    height: '100%'
   },
   centeredView: {
     flex: 1,
@@ -198,7 +158,6 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     color: '#282828',
-    width: 288,
   },
   subtitleText: {
     fontSize: 14,
@@ -209,15 +168,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   lottieView: {
-    height: 240,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    transform: [{ scale: 1.5 }],
   },
   lottieAnimation: {
-    height: '100%',
-    width: 320,
+    // height: 200,
   },
   footerView: {
     height: 96,
