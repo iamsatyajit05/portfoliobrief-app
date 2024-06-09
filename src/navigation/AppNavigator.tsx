@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../components/ThemeContext';
@@ -8,6 +8,7 @@ import NewsScreen from '../screens/NewsScreen';
 import SettingScreen from '../screens/SettingScreen';
 import StocksScreen from '../screens/StocksScreen';
 import Header from '../components/Header';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -22,6 +23,10 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
   const { isDarkMode } = useTheme();
+
+  useEffect(() => {
+    changeNavigationBarColor(isDarkMode ? "black" : "white", true);
+  }, [isDarkMode])
 
   return (
     <Tab.Navigator
@@ -54,14 +59,18 @@ const AppNavigator = () => {
         },
         tabBarIconStyle: {
           marginTop: 3
-        }
+        },
+        headerStyle: {
+          backgroundColor: isDarkMode ? 'black' : 'white',
+        },
+        headerShadowVisible: false,
       })}
     >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle: () => <Header name="Portfolio Brief" />
+          headerTitle: () => <Header name="Portfolio Brief" search />
         }} />
       <Tab.Screen
         name="News"

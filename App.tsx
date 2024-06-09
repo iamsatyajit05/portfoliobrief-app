@@ -10,15 +10,15 @@ const Stack = createStackNavigator();
 
 const App = () => {
   return (
-<ThemeProvider>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="OnBoardingScreen" component={OnBoardingScreen} />
-        <Stack.Screen name="NewsScreen" component={NewsScreen} />
-        <Stack.Screen name="AppNavigator" component={AppNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
-</ThemeProvider>
+    <ThemeProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="OnBoardingScreen" component={OnBoardingScreen} />
+          <Stack.Screen name="NewsScreen" component={NewsScreen} />
+          <Stack.Screen name="AppNavigator" component={AppNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 };
 

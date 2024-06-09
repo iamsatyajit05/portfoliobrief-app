@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Linking, StatusBar } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +12,7 @@ import ButtonComponent from '../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GOOGLE_WEB_CLIENT_ID, colors } from '../utils/constants';
 import NetworkError from '../components/NetworkError';
+import { useTheme } from '../components/ThemeContext';
 
 type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'OnBoardingScreen'>;
 
@@ -23,6 +24,7 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [showLoginBtn, setShowLoginBtn] = useState(false);
   const networkInformation = CheckConnection();
+  const { isDarkMode } = useTheme();
 
   useEffect(() => {
     checkLoginStatus();
@@ -71,6 +73,7 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor={isDarkMode ? "black" : "white"} />
       <View style={styles.mainView}>
         <View style={styles.centeredView}>
           <View style={styles.paddingView}>

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, Image, TouchableOpacity, ImageBackground, ScrollView, Linking, SafeAreaView } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ImageBackground, ScrollView, Linking, SafeAreaView, StatusBar } from 'react-native';
 import { useTheme } from '../components/ThemeContext';
 import NetworkError from '../components/NetworkError';
 import { CheckConnection } from '../utils/connection';
@@ -38,30 +37,14 @@ const HomeScreen = () => {
     </TouchableOpacity>
   );
 
-  const renderHighlightItem = ({ item }) => (
-    <TouchableOpacity style={isDarkMode ? styles.highlightDarkItem : styles.highlightLightItem} onPress={() => openURL(item.url)}>
-      <Image source={{ uri: item.image }} style={styles.highlightImage} />
-      <View style={styles.highlightTextContainer}>
-        <Text style={[styles.highlightTitle, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.title}</Text>
-        <Text style={[styles.highlightCategory, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.category}</Text>
-        <Text style={[styles.highlightDate, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.date}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-
   return (
     <SafeAreaView>
+      <StatusBar
+        animated={true}
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        backgroundColor={isDarkMode ? "black" : "white"} />
       <ScrollView>
         <View style={[styles.container, isDarkMode ? styles.darkModeContainer : styles.lightModeContainer]}>
-          <Text style={[styles.header, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Veritas</Text>
-          <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
-            <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
-            <TextInput
-              style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]}
-              placeholder="Search for News..."
-              placeholderTextColor={isDarkMode ? '#ccc' : '#666'}
-            />
-          </View>
           <Text style={[styles.categoryHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Category</Text>
           <View>
             <FlatList
@@ -75,13 +58,14 @@ const HomeScreen = () => {
           </View>
           <Text style={[styles.highlightHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Top Highlights</Text>
           <View>
-            <FlatList
-              data={highlights}
-              renderItem={renderHighlightItem}
-              keyExtractor={(item) => item.id}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={styles.highlightList}
-            />
+            {[...highlights, ...highlights].map((item, index) => (<TouchableOpacity style={isDarkMode ? styles.highlightDarkItem : styles.highlightLightItem} key={index} onPress={() => openURL(item.url)}>
+              <Image source={{ uri: item.image }} style={styles.highlightImage} />
+              <View style={styles.highlightTextContainer}>
+                <Text style={[styles.highlightTitle, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.title}</Text>
+                <Text style={[styles.highlightCategory, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.category}</Text>
+                <Text style={[styles.highlightDate, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{item.date}</Text>
+              </View>
+            </TouchableOpacity>))}
           </View>
         </View>
       </ScrollView>
@@ -105,46 +89,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 14,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 14,
-    borderRadius: 16,
-    paddingHorizontal: 10,
-  },
-  darkModeSearchContainer: {
-    backgroundColor: '#333',
-  },
-  lightModeSearchContainer: {
-    backgroundColor: '#f1f1f1',
-  },
-  searchLightIcon: {
-    marginRight: 10,
-    backgroundColor: '#788EF5',
-    color: 'white',
-    marginLeft: -10,
-    paddingTop: 12,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    borderRadius: 14,
-  },
-  searchDarkIcon: {
-    marginRight: 10,
-    backgroundColor: 'white',
-    color: 'black',
-    marginLeft: -10,
-    paddingTop: 12,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
-    borderRadius: 14,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 10,
-    height: 45,
   },
   categoryHeader: {
     fontSize: 12,
@@ -242,12 +186,13 @@ const styles = StyleSheet.create({
     fontSize: 6,
     color: '#aaa',
   },
+
   darkModeText: {
     color: '#fff',
   },
   lightModeText: {
     color: '#000',
-  },
+  }
 });
 
 export default HomeScreen;
