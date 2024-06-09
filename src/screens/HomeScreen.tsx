@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, FlatList, Image, TouchableOpacity, ImageBackground, ScrollView, Linking } from 'react-native';
+import { View, Text, StyleSheet, TextInput, FlatList, Image, TouchableOpacity, ImageBackground, ScrollView, Linking, SafeAreaView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../components/ThemeContext';
+import NetworkError from '../components/NetworkError';
+import { CheckConnection } from '../utils/connection';
 
 const categories = [
   { id: '1', title: 'Innovations & Ideas', image: 'https://cdn.pixabay.com/photo/2017/04/26/09/59/europe-2262154_1280.jpg', url: 'https://example.com/innovations' },
@@ -19,6 +21,8 @@ const highlights = [
 
 const HomeScreen = () => {
   const { isDarkMode } = useTheme();
+
+  const networkInformation = CheckConnection();
 
   const openURL = (url) => {
     Linking.openURL(url).catch((err) => console.error("Failed to open URL:", err));
@@ -46,40 +50,43 @@ const HomeScreen = () => {
   );
 
   return (
-    <ScrollView>
-      <View style={[styles.container, isDarkMode ? styles.darkModeContainer : styles.lightModeContainer]}>
-        <Text style={[styles.header, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Veritas</Text>
-        <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
-          <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
-          <TextInput
-            style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]}
-            placeholder="Search for News..."
-            placeholderTextColor={isDarkMode ? '#ccc' : '#666'}
-          />
+    <SafeAreaView>
+      <ScrollView>
+        <View style={[styles.container, isDarkMode ? styles.darkModeContainer : styles.lightModeContainer]}>
+          <Text style={[styles.header, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Veritas</Text>
+          <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
+            <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
+            <TextInput
+              style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]}
+              placeholder="Search for News..."
+              placeholderTextColor={isDarkMode ? '#ccc' : '#666'}
+            />
+          </View>
+          <Text style={[styles.categoryHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Category</Text>
+          <View>
+            <FlatList
+              data={categories}
+              renderItem={renderCategoryItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.categoryList}
+            />
+          </View>
+          <Text style={[styles.highlightHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Top Highlights</Text>
+          <View>
+            <FlatList
+              data={highlights}
+              renderItem={renderHighlightItem}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={styles.highlightList}
+            />
+          </View>
         </View>
-        <Text style={[styles.categoryHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Category</Text>
-        <View>
-          <FlatList
-            data={categories}
-            renderItem={renderCategoryItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.categoryList}
-          />
-        </View>
-        <Text style={[styles.highlightHeader, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Top Highlights</Text>
-        <View>
-          <FlatList
-            data={highlights}
-            renderItem={renderHighlightItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.highlightList}
-          />
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {!networkInformation && <NetworkError />}
+    </SafeAreaView>
   );
 };
 

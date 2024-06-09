@@ -7,12 +7,11 @@ import { CheckConnection } from '../utils/connection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import { firebase } from '@react-native-firebase/app';
 import LottieView from 'lottie-react-native';
 import ButtonComponent from '../components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GOOGLE_WEB_CLIENT_ID, colors } from '../utils/constants';
+import NetworkError from '../components/NetworkError';
 
 type IntroScreen2NavigationProp = StackNavigationProp<RootStackParamList, 'OnBoardingScreen'>;
 
@@ -131,6 +130,7 @@ const IntroScreen2: React.FC<Props> = ({ navigation }) => {
           )}
         </View>
       </View>
+      {!networkInformation && <NetworkError />}
     </SafeAreaView >
   );
 };
