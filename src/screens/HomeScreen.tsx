@@ -7,34 +7,60 @@ import NewsSummaryCard from '../components/NewsSummaryCard';
 import Topics from '../components/Topics';
 
 const highlights = [
-  { id: '1', title: 'Monarch population soars 4,900 percent', category: 'World in focus', date: '07/05/2024', image: 'https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg', url: 'https://example.com/monarch-population' },
-  { id: '2', title: 'Monarch population soars 4,900 percent', category: 'World in focus', date: '07/05/2024', image: 'https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg', url: 'https://example.com/monarch-population' },
-  { id: '3', title: 'Monarch population soars 4,900 percent', category: 'World in focus', date: '07/05/2024', image: 'https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg', url: 'https://example.com/monarch-population' },
-  { id: '4', title: 'Monarch population soars 4,900 percent', category: 'World in focus', date: '07/05/2024', image: 'https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg', url: 'https://example.com/monarch-population' },
-  { id: '5', title: 'Monarch population soars 4,900 percent', category: 'World in focus', date: '07/05/2024', image: 'https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg', url: 'https://example.com/monarch-population' },
+  {
+    article_lead_image_url: 'https://example.com/image1.jpg',
+    article_url: 'https://example.com/article1',
+    article_title: 'Article Title 1',
+    article_source: 'Source 1',
+    article_date_published: '2024-06-01',
+    article_summary: 'This is the summary of article 1.',
+  },
+  {
+    article_lead_image_url: 'https://example.com/image2.jpg',
+    article_url: 'https://example.com/article2',
+    article_title: 'Article Title 2',
+    article_source: 'Source 2',
+    article_date_published: '2024-06-02',
+    article_summary: 'This is the summary of article 2.',
+  },
+  {
+    article_lead_image_url: 'https://example.com/image3.jpg',
+    article_url: 'https://example.com/article3',
+    article_title: 'Article Title 3',
+    article_source: 'Source 3',
+    article_date_published: '2024-06-03',
+    article_summary: 'This is the summary of article 3.',
+  },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }: any) => {
   const { isDarkMode } = useTheme();
 
   const networkInformation = CheckConnection();
 
-  const openURL = (url) => {
+  const openURL = (url: string) => {
     Linking.openURL(url).catch((err) => console.error("Failed to open URL:", err));
   };
 
+  const onNewsPress = (index: number) => {
+    navigation.navigate('NewsFeedScreen', {
+      index,
+      news: highlights
+    });
+  }
+
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{height: '100%', backgroundColor: 'white'}}>
       <StatusBar
         animated={true}
         barStyle={isDarkMode ? "light-content" : "dark-content"}
         backgroundColor={isDarkMode ? "black" : "white"} />
-      <ScrollView>
+      <ScrollView style={{height: '100%'}}>
         <View style={[styles.container, isDarkMode ? styles.darkModeContainer : styles.lightModeContainer]}>
           <Text style={[styles.subHeading, isDarkMode ? styles.darkModeText : styles.lightModeText]}>Top Highlights</Text>
           <View>
             {highlights.map((news, index) => (
-              <NewsSummaryCard key={index} news={news} />
+              <NewsSummaryCard key={index} news={news} onPress={() => onNewsPress(index)} />
             ))}
           </View>
         </View>

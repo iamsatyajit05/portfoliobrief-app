@@ -1,13 +1,13 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { useTheme } from "./ThemeContext";
 
-const NewsSummaryCard = ({ news }) => {
+const NewsSummaryCard = ({ news, onPress }: any) => {
     const { isDarkMode } = useTheme();
 
     return (
-        <TouchableOpacity style={isDarkMode ? styles.highlightDarkItem : styles.highlightLightItem}>
+        <TouchableOpacity style={isDarkMode ? styles.highlightDarkItem : styles.highlightLightItem} onPress={onPress}>
             <View style={styles.highlightTextContainer}>
-                <Text style={[styles.highlightTitle, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{news.title}</Text>
+                <Text style={[styles.highlightTitle, isDarkMode ? styles.darkModeText : styles.lightModeText]}>{news.article_title}</Text>
             </View>
             <Image source={{ uri: "https://cdn.pixabay.com/photo/2017/11/12/13/37/forest-2942477_1280.jpg" }} style={styles.highlightImage} />
         </TouchableOpacity>
