@@ -47,7 +47,7 @@ const AppNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: isDarkMode ? 'white' : '#788EF5',
+        tabBarActiveTintColor: isDarkMode ? 'white' : '#5474FD',
         tabBarInactiveTintColor: isDarkMode ? '#aaa' : 'gray',
         tabBarStyle: {
           backgroundColor: isDarkMode ? 'black' : 'white',
@@ -82,13 +82,15 @@ const AppNavigator = () => {
         name="Setting"
         component={SettingScreen}
         options={{
-          headerTitle: () => <Header name="Setting" />
+          headerTitle: () => <Header name="Setting" />,
+          headerShown: false 
         }} />
       <Tab.Screen
         name="Stocks"
         component={StocksScreen}
         options={{
-          headerTitle: () => <Header name="Stocks" />
+          headerTitle: () => <Header name="Stocks" />,
+          headerShown: false
         }} />
     </Tab.Navigator>
   );

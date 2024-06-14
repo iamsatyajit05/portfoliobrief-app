@@ -134,11 +134,11 @@ const StocksScreen: React.FC = () => {
 
 
 <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
-          <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
+          <Ionicons name="search" size={24} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
           <TextInput 
             style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]} 
             placeholder="Search for News..." 
-            placeholderTextColor={isDarkMode ? '#ccc' : '#666'}
+            placeholderTextColor={isDarkMode ? '#ccc' : '#A7A7A7'}
           />
         </View>
 
@@ -180,20 +180,23 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   Stockheader: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: '700',
+    fontFamily:'Inter-Bold',
+    marginBottom: 32,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 4,
   },
  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 14,
+    borderWidth:1,
+    borderColor: '#00000033',
     borderRadius: 12,
     paddingHorizontal: 10,
   },
@@ -201,33 +204,36 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   lightModeSearchContainer: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#fff',
   },
   searchLightIcon: {
-	marginRight: 10,
-    backgroundColor: '#788EF5',
+    marginRight: 10,
+    backgroundColor: '#5474FD',
     color: 'white',
-    marginLeft: -10,
-    paddingTop: 12,
+    marginLeft: -10.5,
+    paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 10,
+    paddingBottom: 11,
     borderRadius: 12,
   },
  searchDarkIcon: {
-	marginRight: 10,
+    marginRight: 10,
     backgroundColor: 'white',
     color: 'black',
-    marginLeft: -10,
-    paddingTop: 12,
+    marginLeft: -10.5,
+    paddingTop: 10,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingBottom: 10,
-    borderRadius: 14,
+    paddingBottom: 11,
+    borderRadius: 12,
   },
   searchInput: {
     flex: 1,
-    fontSize: 10,
+    color:'#000',
+    fontWeight:'500',
+    fontFamily:'Inter-Bold',
+    fontSize: 12.48,
     height: 45,
   },
   
@@ -236,24 +242,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerText: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: 20,
+    fontWeight: '600',
+    fontFamily:'Inter-Bold',
     marginRight: 10,
   },
   selectedStocksText: {
-    fontSize: 10,
-marginBottom:8,
+    fontSize: 12,
+    marginBottom:8,
+    fontFamily:'Inter-Medium',
+    fontWeight: '500',
+    Color: '#000000B2',
+    
   },
   saveButton: {
-    backgroundColor: '#788EF5',
     borderRadius: 10,
     paddingVertical: 6,
     paddingHorizontal: 16,
   },
   saveButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-fontSize:12,
+    fontWeight: '700',
+    fontFamily:'Inter-Bold',
+    fontSize:14,
   },
   stockButton: {
     alignItems: 'left',
@@ -271,7 +281,7 @@ fontSize:12,
     backgroundColor: '#f9f9f9',
 
   },
-stockDarkButton: {
+    stockDarkButton: {
     alignItems: 'left',
     padding: 8,
     marginVertical: 5,
@@ -294,9 +304,10 @@ stockDarkButton: {
     backgroundColor: 'gray',
   },
   stockButtonText: {
-    color: '#000',
- fontSize: 10,
+    color: '#fff',
+    fontSize: 14,
     fontWeight: '600',
+    fontFamily:'Inter-Medium',
     flex: 1,
   },
 });
