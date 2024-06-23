@@ -17,7 +17,6 @@ export async function saveUserDB(userInfo:any){      //saving user in db
         picture,
         providerId,
       };
-      console.log(SERVER_URL)
       // Send API request to save user data
       const response = await fetch(`http://${SERVER_URL}:5000/api/v1/users/save`, {
         method: 'POST',
@@ -59,7 +58,6 @@ export async function fetchNews(categories: string[] = [], page: number = 1, lim
     }
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error fetching news:', error);
@@ -85,10 +83,59 @@ export async function saveStocks (googleId: string, stocks: any[]) {
     }
 
     const data = await response.json();
-    console.log('Successfully updated user stocks:', data);
     // Handle the response data as needed
   } catch (error) {
     console.error('API call error:', error);
     // Handle network errors or other exceptions
+  }
+  
+}
+export async function searchNewsByTitle(queryText: string, page: number = 1, limit: number = 10): Promise<any[]> {
+  if (!queryText.trim()) {
+    throw new Error('Search bar is empty');
+  }
+
+  const encodedQueryText = encodeURIComponent(queryText);
+  const url = `http://${SERVER_URL}:5000/api/v1/news/search?searchText=${encodedQueryText}&page=${page}&limit=${limit}`;
+  console.log(url)
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error searching news:', error);
+    throw error;
+  }
+}
+export async function fetchUserStocks(googleId: string): Promise<any> {
+  const url = `http://${SERVER_URL}:5000/api/v1/users/userStocks/${googleId}`;
+console.log(url)
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching user stocks:', error);
+    throw error;
   }
 }

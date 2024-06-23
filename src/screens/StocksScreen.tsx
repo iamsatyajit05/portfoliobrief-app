@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import { useTheme } from '../components/ThemeContext';
 import auth from '@react-native-firebase/auth';
-import { saveStocks } from '../constants/api';
+import { saveStocks , fetchUserStocks } from '../constants/api';
+import { useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 interface Stock {
   id: number;
@@ -114,7 +115,33 @@ const stockData :Stock[] = [
 
 const StocksScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const [selectedStocks, setSelectedStocks] = useState<number[]>([]); // Changed to number[] for storing stock IDs
+  const [selectedStocks, setSelectedStocks] = useState<number[]>([]);
+
+  useEffect(() => {
+    const fetchAndSetUserStocks = async () => {
+      try {
+        const user = auth().currentUser;
+        const googleId = user ? user.uid : ''; // Ensure you have the user's UID
+        
+        if (googleId) {
+          const userStocks = await fetchUserStocks(googleId);
+          if (userStocks && userStocks.stocks) {
+            const stockIds = userStocks.stocks.map((stockName: string) => {
+              const stock = stockData.find(s => s.name === stockName);
+              return stock ? stock.id : null;
+            }).filter((id: number | null): id is number => id !== null);
+            
+            setSelectedStocks(stockIds);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch user stocks:', error);
+        Alert.alert('Error', 'Failed to fetch user stocks. Please try again later.');
+      }
+    };
+
+    fetchAndSetUserStocks();
+  }, []);
 
   const handleStockPress = (stockId: number) => {
     setSelectedStocks(prevSelectedStocks => {
@@ -125,21 +152,20 @@ const StocksScreen: React.FC = () => {
       }
     });
   };
-  
+
   const handleSavePress = async () => {
     try {
       const selectedStockNames = selectedStocks.map(id => {
         const selectedStock = stockData.find(stock => stock.id === id);
         return selectedStock ? selectedStock.name : '';
       });
-  
+
       const user = auth().currentUser;
       const googleId = user ? user.uid : ''; // Ensure you have the user's UID
-  
+
       const response = await saveStocks(googleId, selectedStockNames);
       console.log('Stocks saved:', response);
-  
-      // Optionally, show a success message or perform further actions
+
       Alert.alert('Success', 'Stocks saved successfully!');
     } catch (error) {
       console.error('Failed to save stocks:', error);

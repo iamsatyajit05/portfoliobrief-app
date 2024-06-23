@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../components/ThemeContext';
 
-const Header = (props: { name: string, search?: boolean }) => {
+const Header = (props: { name: string, search?: boolean, onPressSearch?: () => void }) => {
     const { isDarkMode } = useTheme();
 
     return (
@@ -10,9 +10,11 @@ const Header = (props: { name: string, search?: boolean }) => {
             <Text style={[styles.text, isDarkMode ? styles.darkModeText : styles.lightModeText]}>
                 {props.name}
             </Text>
-            {props.search && <View>
-                <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} />
-            </View>}
+            {props.search && (
+                <TouchableOpacity onPress={props.onPressSearch}>
+                    <Ionicons name="search" size={20} color={isDarkMode ? 'white' : '#666'} />
+                </TouchableOpacity>
+            )}
         </View>
     )
 }
