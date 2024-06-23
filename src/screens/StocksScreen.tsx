@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ScrollView} from 'react-native';
 import { useTheme } from '../components/ThemeContext';
+import auth from '@react-native-firebase/auth';
+import { saveStocks } from '../constants/api';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-const stockData = [
+interface Stock {
+  id: number;
+  name: string;
+}
+const stockData :Stock[] = [
    { id: 1, name: "Reliance Industries Limited" },
   { id: 2, name: "TCS (Tata Consultancy Services)" },
   { id: 3, name: "HDFC Bank" },
@@ -109,10 +114,10 @@ const stockData = [
 
 const StocksScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
-  const [selectedStocks, setSelectedStocks] = useState<number[]>([]); // Change type to number
+  const [selectedStocks, setSelectedStocks] = useState<number[]>([]); // Changed to number[] for storing stock IDs
 
-  const handleStockPress = (stockId: number) => { // Change parameter type to number
-    setSelectedStocks((prevSelectedStocks) => {
+  const handleStockPress = (stockId: number) => {
+    setSelectedStocks(prevSelectedStocks => {
       if (prevSelectedStocks.includes(stockId)) {
         return prevSelectedStocks.filter(id => id !== stockId);
       } else {
@@ -120,57 +125,72 @@ const StocksScreen: React.FC = () => {
       }
     });
   };
-
-  const handleSavePress = () => {
-    Alert.alert('Selected Stocks', selectedStocks.join(', '));
+  
+  const handleSavePress = async () => {
+    try {
+      const selectedStockNames = selectedStocks.map(id => {
+        const selectedStock = stockData.find(stock => stock.id === id);
+        return selectedStock ? selectedStock.name : '';
+      });
+  
+      const user = auth().currentUser;
+      const googleId = user ? user.uid : ''; // Ensure you have the user's UID
+  
+      const response = await saveStocks(googleId, selectedStockNames);
+      console.log('Stocks saved:', response);
+  
+      // Optionally, show a success message or perform further actions
+      Alert.alert('Success', 'Stocks saved successfully!');
+    } catch (error) {
+      console.error('Failed to save stocks:', error);
+      Alert.alert('Error', 'Failed to save stocks. Please try again later.');
+    }
   };
 
   return (
-<ScrollView>
-    <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
-<Text style={[styles.Stockheader, {color:isDarkMode ? '#fff' : '#000'}, { textAlign: 'center' }]}>Stocks</Text>
+    <ScrollView>
+      <View style={[styles.container, { backgroundColor: isDarkMode ? '#000' : '#fff' }]}>
+        <Text style={[styles.Stockheader, { color: isDarkMode ? '#fff' : '#000' }, { textAlign: 'center' }]}>Stocks</Text>
 
-
-
-
-<View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
+        <View style={[styles.searchContainer, isDarkMode ? styles.darkModeSearchContainer : styles.lightModeSearchContainer]}>
           <Ionicons name="search" size={24} color={isDarkMode ? 'white' : '#666'} style={isDarkMode ? styles.searchDarkIcon : styles.searchLightIcon} />
-          <TextInput 
-            style={[styles.searchInput, isDarkMode ? styles.darkModeText : styles.lightModeText]} 
-            placeholder="Search for News..." 
+          <TextInput
+            style={[styles.searchInput, isDarkMode ? styles.darkModeTextInput : styles.lightModeTextInput]}
+            placeholder="Search for News..."
             placeholderTextColor={isDarkMode ? '#ccc' : '#A7A7A7'}
           />
         </View>
 
-
-
-
-
-
-      {/* Title and Save Button */}
-      <View style={styles.header}>
-        <View style={styles.titleContainer}>
-          <Text style={[styles.headerText, { color: isDarkMode ? '#fff' : '#000' }]}>Select Stocks</Text>
+        {/* Title and Save Button */}
+        <View style={styles.header}>
+          <View style={styles.titleContainer}>
+            <Text style={[styles.headerText, { color: isDarkMode ? '#fff' : '#000' }]}>Select Stocks</Text>
+          </View>
+          <TouchableOpacity onPress={handleSavePress} style={[styles.saveButton, { backgroundColor: isDarkMode ? '#fff' : '#E5E8E8' }]}>
+            <Text style={[styles.saveButtonText, { color: isDarkMode ? '#000' : '#000' }]}>Save</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={handleSavePress} style={[styles.saveButton,{backgroundColor:isDarkMode ? '#fff':'#E5E8E8'}]}>
-          <Text style={[styles.saveButtonText,{color: isDarkMode ?'#000':'#000'}] }>Save</Text>
-        </TouchableOpacity>
+
+        <Text style={[styles.selectedStocksText, { color: isDarkMode ? '#fff' : '#000' }]}>
+          {selectedStocks.length} stocks selected out of 100
+        </Text>
+
+        {/* Stock Buttons */}
+        {stockData.map(stock => (
+          <TouchableOpacity
+            key={stock.id}
+            style={[
+              styles.stockButton,
+              isDarkMode ? styles.stockDarkButton : styles.stockButton,
+              selectedStocks.includes(stock.id) && (isDarkMode ? styles.stockDarkButtonSelected : styles.stockButtonSelected)
+            ]}
+            onPress={() => handleStockPress(stock.id)}
+          >
+            <Text style={[styles.stockButtonText, { color: isDarkMode ? '#fff' : '#000' }]}>{stock.name}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
-      <Text style={[styles.selectedStocksText, { color: isDarkMode ? '#fff' : '#000' }]}>
-            {selectedStocks.length} stocks selected out of 100
-          </Text>
-      {/* Stock Buttons */}
-      {stockData.map(stock => (
-        <TouchableOpacity
-          key={stock.id}
-          style={[styles.stockButton,isDarkMode ? styles.stockDarkButton : styles.stockButton,selectedStocks.includes(stock.id) &&  (isDarkMode ? styles.stockDarkButtonSelected : styles.stockButtonSelected)]}
-          onPress={() => handleStockPress(stock.id)}
-        >
-          <Text style={[styles.stockButtonText,{color:isDarkMode ? '#fff':'#000'}]}>{stock.name}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-</ScrollView>
+    </ScrollView>
   );
 };
 
@@ -182,7 +202,7 @@ const styles = StyleSheet.create({
   Stockheader: {
     fontSize: 20,
     fontWeight: '700',
-    fontFamily:'Inter-Bold',
+    fontFamily: 'Inter-Bold',
     marginBottom: 32,
   },
   header: {
@@ -191,11 +211,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
- searchContainer: {
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 14,
-    borderWidth:1,
+    borderWidth: 1,
     borderColor: '#00000033',
     borderRadius: 12,
     paddingHorizontal: 10,
@@ -217,7 +237,7 @@ const styles = StyleSheet.create({
     paddingBottom: 11,
     borderRadius: 12,
   },
- searchDarkIcon: {
+  searchDarkIcon: {
     marginRight: 10,
     backgroundColor: 'white',
     color: 'black',
@@ -230,13 +250,27 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    color:'#000',
-    fontWeight:'500',
-    fontFamily:'Inter-Bold',
+    color: '#000',
+    fontWeight: '500',
+    fontFamily: 'Inter-Bold',
     fontSize: 12.48,
     height: 45,
+    marginLeft: 10,
   },
-  
+  darkModeTextInput: {
+    backgroundColor: '#333',
+    color: '#fff',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  lightModeTextInput: {
+    backgroundColor: '#f0f0f0',
+    color: '#333',
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -244,16 +278,15 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 20,
     fontWeight: '600',
-    fontFamily:'Inter-Bold',
+    fontFamily: 'Inter-Bold',
     marginRight: 10,
   },
   selectedStocksText: {
     fontSize: 12,
-    marginBottom:8,
-    fontFamily:'Inter-Medium',
+    marginBottom: 8,
+    fontFamily: 'Inter-Medium',
     fontWeight: '500',
-    Color: '#000000B2',
-    
+    color: '#000000B2',
   },
   saveButton: {
     borderRadius: 10,
@@ -262,11 +295,11 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontWeight: '700',
-    fontFamily:'Inter-Bold',
-    fontSize:14,
+    fontFamily: 'Inter-Bold',
+    fontSize: 14,
   },
   stockButton: {
-    alignItems: 'left',
+    alignItems: 'flex-start',
     padding: 8,
     marginVertical: 5,
     borderRadius: 10,
@@ -279,10 +312,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     backgroundColor: '#f9f9f9',
-
   },
-    stockDarkButton: {
-    alignItems: 'left',
+  stockDarkButton: {
+    alignItems: 'flex-start',
     padding: 8,
     marginVertical: 5,
     borderRadius: 10,
@@ -295,19 +327,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
     backgroundColor: '#333',
-
   },
   stockButtonSelected: {
-    backgroundColor:'#E5E8E8',
+    backgroundColor: '#E5E8E8',
   },
- stockDarkButtonSelected: {
+  stockDarkButtonSelected: {
     backgroundColor: 'gray',
   },
   stockButtonText: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '600',
-    fontFamily:'Inter-Medium',
+    fontFamily: 'Inter-Medium',
     flex: 1,
   },
 });
