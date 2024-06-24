@@ -83,6 +83,7 @@ export async function saveStocks (googleId: string, stocks: any[]) {
     }
 
     const data = await response.json();
+    return data
     // Handle the response data as needed
   } catch (error) {
     console.error('API call error:', error);
@@ -138,4 +139,50 @@ console.log(url)
     console.error('Error fetching user stocks:', error);
     throw error;
   }
+}
+export async function fetchNewsByStocks(googleId: string, page: number = 1, limit: number = 3) {
+  try {
+    // Construct the base URL
+    let url = `http://${SERVER_URL}:5000/api/v1/news/stocks?userId=${googleId}&page=${page}&limit=${limit}`;
+    console.log(url);
+    // Make the GET request
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching news:', error);
+    throw error;
+  }
+  
+}
+export async function fetchStocklist() {
+  try {
+    const response = await fetch(`http://${SERVER_URL}:5000/api/v1/news/stocklist`,{
+      method:'GET',
+      headers:{
+        'Content-Type':'application/json'
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  }
+  catch(error){
+    console.error('Error fetching list:', error);
+    throw error;
+  }
+  
 }

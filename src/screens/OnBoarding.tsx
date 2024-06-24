@@ -22,7 +22,7 @@ type Props = {
   navigation: IntroScreen2NavigationProp;
 };
 
-const IntroScreen2: React.FC<Props> = ({ navigation }) => {
+const IntroScreen2: React.FC<Props> = ({ navigation }:any) => {
   const [loading, setLoading] = useState(false);
   const [showLoginBtn, setShowLoginBtn] = useState(false);
   const networkInformation = CheckConnection();

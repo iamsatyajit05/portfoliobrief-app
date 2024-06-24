@@ -20,6 +20,7 @@ export type RootStackParamList = {
   Stocks: undefined;
   HomeStack: undefined;
   SearchScreen: undefined;
+  OnBoardingScreen:undefined;
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
