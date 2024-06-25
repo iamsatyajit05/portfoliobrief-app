@@ -57,7 +57,7 @@ const NewsFeedScreen: React.FC<Props> = ({ route, navigation }) => {
     // Simulate API fetch delay
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
 
     return () => clearTimeout(timer); // Cleanup timer on unmount
   }, []);

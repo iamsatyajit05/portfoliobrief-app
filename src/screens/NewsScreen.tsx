@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text ,StyleSheet, ScrollView, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
 import { useTheme } from '../components/ThemeContext';
 import NetworkError from '../components/NetworkError';
 import { CheckConnection } from '../utils/connection';
@@ -68,15 +68,20 @@ const NewsScreen = ({ navigation }: any) => {
           />
         }
       >
-        {news.length > 0 ? (
+        {loading ? (
+          // Skeleton loading
+          Array.from({ length: 10 }, (_, index) => (
+            <NewsItemSkeleton key={index} />
+          ))
+        ) : news.length > 0 ? (
+          // Render news items
           news.map((item, index) => (
             <NewsSummaryCard key={index} news={item} onPress={() => onNewsPress(index)} />
           ))
         ) : (
-          <View>
-            {Array.from({ length: 10 }, (_, index) => (
-              <NewsItemSkeleton key={index} />
-            ))}
+          // No news found message
+          <View style={styles.noNewsContainer}>
+            <Text style={styles.noNewsText}>No news found. Please select any stock.</Text>
           </View>
         )}
       </ScrollView>
@@ -88,6 +93,17 @@ const NewsScreen = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+  },
+  noNewsContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  noNewsText: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#666',
   },
 });
 
