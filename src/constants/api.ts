@@ -18,7 +18,7 @@ export async function saveUserDB(userInfo:any){      //saving user in db
         providerId,
       };
       // Send API request to save user data
-      const response = await fetch(`http://${SERVER_URL}:5000/api/v1/users/save`, {
+      const response = await fetch(`http://${SERVER_URL}/api/v1/users/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ export async function saveUserDB(userInfo:any){      //saving user in db
 export async function fetchNews(categories: string[] = [], page: number = 1, limit: number = 3) {
   try {
     // Construct the base URL
-    let url = `http://${SERVER_URL}:5000/api/v1/news?`;
+    let url = `http://${SERVER_URL}/api/v1/news?`;
 
     // Add categories to the URL if provided
     if (categories.length > 0) {
@@ -66,7 +66,7 @@ export async function fetchNews(categories: string[] = [], page: number = 1, lim
 }
 export async function saveStocks (googleId: string, stocks: any[]) {
   try {
-    const url = `http://${SERVER_URL}:5000/api/v1/users/stocks`;
+    const url = `http://${SERVER_URL}/api/v1/users/stocks`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -97,7 +97,7 @@ export async function searchNewsByTitle(queryText: string, page: number = 1, lim
   }
 
   const encodedQueryText = encodeURIComponent(queryText);
-  const url = `http://${SERVER_URL}:5000/api/v1/news/search?searchText=${encodedQueryText}&page=${page}&limit=${limit}`;
+  const url = `http://${SERVER_URL}/api/v1/news/search?searchText=${encodedQueryText}&page=${page}&limit=${limit}`;
   console.log(url)
   try {
     const response = await fetch(url, {
@@ -119,7 +119,7 @@ export async function searchNewsByTitle(queryText: string, page: number = 1, lim
   }
 }
 export async function fetchUserStocks(googleId: string): Promise<any> {
-  const url = `http://${SERVER_URL}:5000/api/v1/users/userStocks/${googleId}`;
+  const url = `http://${SERVER_URL}/api/v1/users/userStocks/${googleId}`;
 console.log(url)
   try {
     const response = await fetch(url, {
@@ -143,7 +143,7 @@ console.log(url)
 export async function fetchNewsByStocks(googleId: string, page: number = 1, limit: number = 3) {
   try {
     // Construct the base URL
-    let url = `http://${SERVER_URL}:5000/api/v1/news/stocks?userId=${googleId}&page=${page}&limit=${limit}`;
+    let url = `http://${SERVER_URL}/api/v1/news/stocks?userId=${googleId}&page=${page}&limit=${limit}`;
     console.log(url);
     // Make the GET request
     const response = await fetch(url, {
@@ -167,7 +167,7 @@ export async function fetchNewsByStocks(googleId: string, page: number = 1, limi
 }
 export async function fetchStocklist() {
   try {
-    const response = await fetch(`http://${SERVER_URL}:5000/api/v1/news/stocklist`,{
+    const response = await fetch(`http://${SERVER_URL}/api/v1/news/stocklist`,{
       method:'GET',
       headers:{
         'Content-Type':'application/json'
