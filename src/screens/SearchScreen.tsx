@@ -18,10 +18,9 @@ const SearchScreen = ({ navigation }: any) => {
 
     try {
       const response = await searchNewsByTitle(query);
-      console.log(response)
       setSearchResults(response);
     } catch (error) {
-      console.error('Error fetching news:', error);
+      console.log('Error fetching news:', error);
     }
   };
 

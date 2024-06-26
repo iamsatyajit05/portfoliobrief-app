@@ -22,7 +22,7 @@ const SettingScreen: React.FC<Props> = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
 
   const handleOpenURL = (url: string) => {
-    Linking.openURL(url).catch(err => console.error("Couldn't load page", err));
+    Linking.openURL(url).catch(err => console.log("Couldn't load page", err));
   };
 
   const handleLogout = async () => {
@@ -38,7 +38,7 @@ const SettingScreen: React.FC<Props> = ({ navigation }) => {
         routes: [{ name: 'OnBoardingScreen' }],
       });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.log('Logout error:', error);
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ const SettingScreen: React.FC<Props> = ({ navigation }) => {
             source={{ uri: 'https://cdn.pixabay.com/photo/2020/06/13/17/51/milky-way-5295160_960_720.jpg' }}
             style={styles.userImage}
             resizeMode="cover"
-            onError={(error) => console.error('Image loading error:', error)}
+            onError={(error) => console.log('Image loading error:', error)}
           />
         )}
         <View style={styles.userInfoText}>

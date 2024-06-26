@@ -38,7 +38,6 @@ const IntroScreen2: React.FC<Props> = ({ navigation }:any) => {
   const checkLoginStatus = async () => {
     try {
       const userIsLoggedIn = await AsyncStorage.getItem('userLoggedIn');
-      console.log(userIsLoggedIn);
 
       if (userIsLoggedIn) {
         navigation.navigate('AppNavigator');
@@ -63,7 +62,6 @@ const IntroScreen2: React.FC<Props> = ({ navigation }:any) => {
       const userInfo = await auth().signInWithCredential(googleCredential);
 
       const saveuser = await saveUserDB(userInfo);
-      console.log(saveuser)
       navigation.navigate('AppNavigator');
       navigation.reset({
         index: 0,

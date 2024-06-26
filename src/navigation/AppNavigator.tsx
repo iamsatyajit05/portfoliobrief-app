@@ -118,18 +118,18 @@ const AppNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Setting"
-        component={SettingScreen}
-        options={{
-          headerTitle: () => <Header name="Setting" />,
-          headerShown: false
-        }}
-      />
-      <Tab.Screen
         name="Stocks"
         component={StocksScreen}
         options={{
           headerTitle: () => <Header name="Stocks" />,
+          headerShown: false
+        }}
+      />
+      <Tab.Screen
+        name="Setting"
+        component={SettingScreen}
+        options={{
+          headerTitle: () => <Header name="Setting" />,
           headerShown: false
         }}
       />

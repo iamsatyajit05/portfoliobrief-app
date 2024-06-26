@@ -14,15 +14,30 @@ const NewsScreen = ({ navigation }: any) => {
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // State for loading indicator
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
 
-  const fetchNews = async () => {
+  const fetchNews = async (isRefresh: boolean = false, firstTime: boolean = false) => {
+    console.log(page, isRefresh);
+
     try {
       const user = auth().currentUser;
       const googleId = user ? user.uid : '';
-      const response = await fetchNewsByStocks(googleId, 1, 10);
-      setNews(response);
+      if (isRefresh) {
+        setPage(1);
+        const response = await fetchNewsByStocks(googleId, 1, 10);
+        setNews(response);
+      } else {
+        const response = await fetchNewsByStocks(googleId, firstTime ? 1 : page + 1, 10);
+        setPage(page + 1);
+        if (isRefresh || firstTime) {
+          setNews(response);
+        } else {
+          setNews([...news, ...response]);
+        }
+      }
+
     } catch (error) {
-      console.error('Error fetching personalized news:', error);
+      console.log('Error fetching personalized news:', JSON.stringify(error));
     } finally {
       setLoading(false); // Set loading to false once data fetching completes
       setRefreshing(false);
@@ -30,16 +45,25 @@ const NewsScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    fetchNews();
+    fetchNews(false, true);
 
     const interval = setInterval(fetchNews, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, []);
 
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
+    let mHeight = layoutMeasurement.height;
+    let cSize = contentSize.height;
+    let Y = contentOffset.y;
+
+    if (Math.ceil(mHeight + Y) >= cSize) return true;
+    return false;
+  };
+
   const onRefresh = async () => {
     setRefreshing(true);
-    await fetchNews();
+    await fetchNews(true);
     setRefreshing(false);
   };
 
@@ -47,6 +71,7 @@ const NewsScreen = ({ navigation }: any) => {
     navigation.navigate('NewsFeedScreen', {
       index,
       news,
+      fetchNews
     });
   };
 
@@ -59,6 +84,15 @@ const NewsScreen = ({ navigation }: any) => {
       />
       <ScrollView
         contentContainerStyle={styles.container}
+        onMomentumScrollEnd={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            fetchNews();
+          } else {
+            console.log('Not close to bottom');
+
+          }
+        }}
+        scrollEventThrottle={400}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -70,7 +104,7 @@ const NewsScreen = ({ navigation }: any) => {
       >
         {loading ? (
           // Skeleton loading
-          Array.from({ length: 10 }, (_, index) => (
+          Array.from({ length: 5 }, (_, index) => (
             <NewsItemSkeleton key={index} />
           ))
         ) : news.length > 0 ? (
@@ -81,7 +115,7 @@ const NewsScreen = ({ navigation }: any) => {
         ) : (
           // No news found message
           <View style={styles.noNewsContainer}>
-            <Text style={styles.noNewsText}>No news found. Please select any stock.</Text>
+            <Text style={styles.noNewsText}>No news found. Please select stocks to have personalized feed.</Text>
           </View>
         )}
       </ScrollView>

@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }: any) => {
       const response = await fetchNews();
       setHighlights(response.news);
     } catch (error) {
-      console.error('Error fetching news:', error);
+      console.log('Error fetching news:', error);
     } finally {
       setLoading(false); // Set loading to false once data fetching completes
     }

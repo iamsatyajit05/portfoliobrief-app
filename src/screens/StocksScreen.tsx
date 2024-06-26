@@ -31,7 +31,7 @@ const StocksScreen: React.FC = () => {
         setStockData(stocksWithIds);
         setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
-        console.error('Failed to fetch stock list:', error);
+        console.log('Failed to fetch stock list:', error);
         Alert.alert('Error', 'Failed to fetch stock list. Please try again later.');
       }
     };
@@ -58,7 +58,7 @@ const StocksScreen: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error('Failed to fetch user stocks:', error);
+        console.log('Failed to fetch user stocks:', error);
         Alert.alert('Error', 'Failed to fetch user stocks. Please try again later.');
       }
     };
@@ -93,7 +93,7 @@ const StocksScreen: React.FC = () => {
 
       Alert.alert('Success', 'Stocks saved successfully!');
     } catch (error) {
-      console.error('Failed to save stocks:', error);
+      console.log('Failed to save stocks:', error);
       Alert.alert('Error', 'Failed to save stocks. Please try again later.');
     }
   };
@@ -141,7 +141,7 @@ const StocksScreen: React.FC = () => {
         {/* Stock Buttons or Skeletons */}
         {loading ? (
         // Render skeleton items using array map
-        Array.from({ length: 15 }).map((_, index) => (
+        Array.from({ length: 5 }).map((_, index) => (
           <StocksItemSkeleton key={index}  />
         ))
       ): filteredStocks.length > 0 ? (
@@ -242,7 +242,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   lightModeTextInput: {
-    backgroundColor: '#f0f0f0',
     color: '#333',
     borderRadius: 10,
     paddingVertical: 8,

@@ -44,7 +44,6 @@ export async function fetchNews(categories: string[] = [], page: number = 1, lim
 
     // Add page and limit parameters to the URL
     url += `page=${page}&limit=${limit}`;
-    console.log(url)
     // Make the GET request
     const response = await fetch(url, {
       method: 'GET',
@@ -60,7 +59,7 @@ export async function fetchNews(categories: string[] = [], page: number = 1, lim
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching news:', error);
+    console.log('Error fetching news:', error);
     throw error;
   }
 }
@@ -86,7 +85,7 @@ export async function saveStocks (googleId: string, stocks: any[]) {
     return data
     // Handle the response data as needed
   } catch (error) {
-    console.error('API call error:', error);
+    console.log('API call error:', error);
     // Handle network errors or other exceptions
   }
   
@@ -98,7 +97,6 @@ export async function searchNewsByTitle(queryText: string, page: number = 1, lim
 
   const encodedQueryText = encodeURIComponent(queryText);
   const url = `http://${SERVER_URL}/api/v1/news/search?searchText=${encodedQueryText}&page=${page}&limit=${limit}`;
-  console.log(url)
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -114,13 +112,12 @@ export async function searchNewsByTitle(queryText: string, page: number = 1, lim
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error searching news:', error);
+    console.log('Error searching news:', error);
     throw error;
   }
 }
 export async function fetchUserStocks(googleId: string): Promise<any> {
   const url = `http://${SERVER_URL}/api/v1/users/userStocks/${googleId}`;
-console.log(url)
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -136,7 +133,7 @@ console.log(url)
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching user stocks:', error);
+    console.log('Error fetching user stocks:', error);
     throw error;
   }
 }
@@ -144,7 +141,6 @@ export async function fetchNewsByStocks(googleId: string, page: number = 1, limi
   try {
     // Construct the base URL
     let url = `http://${SERVER_URL}/api/v1/news/stocks?userId=${googleId}&page=${page}&limit=${limit}`;
-    console.log(url);
     // Make the GET request
     const response = await fetch(url, {
       method: 'GET',
@@ -160,7 +156,7 @@ export async function fetchNewsByStocks(googleId: string, page: number = 1, limi
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error fetching news:', error);
+    console.log('Error fetching news:', error);
     throw error;
   }
   
@@ -181,7 +177,7 @@ export async function fetchStocklist() {
     return data;
   }
   catch(error){
-    console.error('Error fetching list:', error);
+    console.log('Error fetching list:', error);
     throw error;
   }
   

@@ -40,20 +40,31 @@ interface Props {
     params: {
       index: number;
       news: NewsItem[];
+      fetchNews?: any;
     };
   };
   navigation: any; // Adjust the type based on your navigation setup
 }
 
 const NewsFeedScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { index, news: initialNews } = route.params;
+  const { index, news: initialNews, fetchNews } = route.params;
   const { isDarkMode } = useTheme();
   const [loading, setLoading] = useState(true); // Loading state
   const [news, setNews] = useState<NewsItem[]>(initialNews);
   const [summaryFontSize, setSummaryFontSize] = useState(16); // Initial font size
   const summaryRef = useRef<Text>(null);
 
+  const fetchExtraNews = async () => {
+    // Fetch more news
+    if (fetchNews) fetchNews();
+  }
+
   useEffect(() => {
+    if (index === news.length - 1) {
+      // Fetch more news
+      fetchExtraNews();
+    }
+
     // Simulate API fetch delay
     const timer = setTimeout(() => {
       setLoading(false);
@@ -86,7 +97,7 @@ const NewsFeedScreen: React.FC<Props> = ({ route, navigation }) => {
     measureSummaryText();
 
     // Cleanup function to clear event listeners
-    return () => {};
+    return () => { };
   }, [summaryFontSize]);
 
   if (loading) {
@@ -129,6 +140,13 @@ const NewsFeedScreen: React.FC<Props> = ({ route, navigation }) => {
     );
   }
 
+
+  const onScroll = (index: number) => {
+    if (index === news.length - 1) {
+      fetchExtraNews();
+    }
+  }
+
   // Actual news feed UI
   return (
     <View style={[styles.container, isDarkMode ? styles.darkModeContainer : styles.lightModeContainer]}>
@@ -145,6 +163,7 @@ const NewsFeedScreen: React.FC<Props> = ({ route, navigation }) => {
         horizontal={false}
         showsPagination={false}
         loop={false}
+        onIndexChanged={onScroll}
       >
         {news.map((item, idx) => (
           <View key={idx} style={styles.child}>
