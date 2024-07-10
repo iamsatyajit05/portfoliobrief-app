@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "860893152250-e8jr2v64b68b5skqafuf20pb2a308jpn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portfoliobrief",
+            "certificate_hash": "4c9d1f3aa09bab9c34d25533cfbf6c810a5d7659"
+          }
+        },
+        {
           "client_id": "860893152250-j2gn0pdusnvjijipjn26le93vbmds25b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
